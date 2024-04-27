@@ -2,14 +2,6 @@ import streamlit as st
 import altair as alt
 import cv2
 import numpy as np
-import sys
-import os
-
-# sys.path.append(os.path.abspath('.'))
-# from .. import utils
-# import utils
-# from ...an import utils
-
 import streamlit as st
 import pandas as pd
 import altair as alt
@@ -17,7 +9,12 @@ from sklearn.ensemble import IsolationForest
 import json
 
 from ultralytics import YOLO
+from ultralytics.solutions import heatmap
 
+# heatmap_obj = heatmap.Heatmap()
+# heatmap_obj.set_args(colormap=cv2.COLORMAP_PARULA,
+#                      view_img=True,
+#                      shape="circle")
 
 
 with open("config.json", "r") as f:
@@ -116,8 +113,6 @@ def main():
 
     with st.sidebar:
         st.title('Event Tracking Dashboard')
-    
-    # FRAME_WINDOW = st.image([])
 
     while True:
 
@@ -130,11 +125,8 @@ def main():
         # FRAME_WINDOW.image(img)
         with placeholder.container():
             col = st.columns((4, 4), gap='medium')
-            # _, frame = camera.read()
-            # img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             avg = np.mean(img[:, :, 2])
             per = (avg / 255) * 100
-            # PLACEHOLDER FOR N_PEOPLE CALCULATION. WE ASSUME THAT THERE ARE 100 people in the room max
             
             X = []
             total_people = len(results[0])
@@ -163,7 +155,6 @@ def main():
 
                 st.markdown('#### Attendies statistics')
 
-                # PLACEHOLDER, here we should get bounding boxes centroids
                 if len(X) > 0:
                     n_people = int(isolation_estimation(X))
                 else:
@@ -174,11 +165,9 @@ def main():
                 st.metric(label="Attendance", value=total_people)
 
             with col[1]:
-                # FRAME_WINDOW = st.image([])
-                # FRAME_WINDOW.image(img)
                 st.markdown('#### Overtime Heatmap Here')
-                # Heatmap mean over certain time period
-                st.image('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRdq-m-6_c0As92g82el-tsfO31XGKFO6h0Cn6b28oUA&s')
+                # frame = heatmap_obj.generate_heatmap(frame, results)
+                st.image('heatmap.jpg')
 
 
 if __name__ == "__main__":
